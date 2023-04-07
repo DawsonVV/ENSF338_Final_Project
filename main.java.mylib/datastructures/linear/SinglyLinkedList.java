@@ -1,12 +1,14 @@
 package main.java.mylib.datastructures.linear;
 
+import main.java.mylib.datastructures.nodes.DNode;
+
 public class SinglyLinkedList<T> {
 //	1. singlyLL:
 //		This is a Singly Linked List Data structure that will implement the following:
 //		- Uses a head object of the base class Node (to be implemented as part of the base classes
 //		mentioned previously) and a tail object to keep track of the end of the list
-		private Node<T> head;
-		private Node<T> tail;
+		private DNode<T> head;
+		private DNode<T> tail;
 //		- Has an integer member variable to keep track of the size of the List (update when
 //		necessary)
 		private int size = 0;
@@ -20,9 +22,9 @@ public class SinglyLinkedList<T> {
 			this.tail = null;
 		}
 		
-		public SinglyLinkedList(Node<T> node) {
+		public SinglyLinkedList(DNode<T> node) {
 			this.head = node;
-			Node<T> current = node;
+			DNode<T> current = node;
 			this.size = 1;
 			while(current.getNext() != null) {
 				current = current.getNext();
@@ -33,8 +35,8 @@ public class SinglyLinkedList<T> {
 	
 //		- InsertHead(node)
 //		o Inserts node object at head of the list
-		public void insertHead(Node<T> node) {
-			Node<T> current = node;
+		public void insertHead(DNode<T> node) {
+			DNode<T> current = node;
 			this.size ++;
 			while(current.getNext() != null) {
 				current = current.getNext();
@@ -46,9 +48,9 @@ public class SinglyLinkedList<T> {
 	
 //		- InsertTail(node)
 //		o Inserts node object at the tail of the list
-		public void insertTail(Node<T> node) {
+		public void insertTail(DNode<T> node) {
 			this.tail.setNext(node);
-			Node<T> current = node;
+			DNode<T> current = node;
 			this.size ++;
 			while(current.getNext() != null) {
 				current = current.getNext();
@@ -61,13 +63,13 @@ public class SinglyLinkedList<T> {
 //		- Insert(node,position)
 //		o Inserts node object in the specified position
 //		▪ Ex. Insert(node ,5) → inserts node to 5th position in list
-		public void insert(Node<T> node, int position) {
+		public void insert(DNode<T> node, int position) {
 			if (position == 1) {
 				insertHead(node);
 			}else if(position == size + 1) {
 				insertTail(node);
 			}else {
-				Node<T> current = node;
+				DNode<T> current = node;
 				for (int i = 0; i < position - 1; i++) {
 	                current = current.getNext();
 	            }
@@ -87,21 +89,41 @@ public class SinglyLinkedList<T> {
 //		insert
 //		▪ Might need to implement a helper function isSorted(), or find a creative
 //		way to know if the list is sorted
-		public void sortedInsert(Node<T> node) {
-			
+		public void sortedInsert(DNode<T> node) {
+			if (this.head == null) {
+	            this.head = node;
+	            this.tail = node;
+	            this.size++;
+	        } else if ((int)node.getData() <= (int)this.head.getData()) {
+	            node.setNext(this.head);
+	            this.head = node;
+	            this.size++;
+	        } else if ((int)node.getData() >= (int)this.tail.getData()) {
+	            this.tail.setNext(node);
+	            this.tail = node;
+	            this.size++;
+	        } else {
+	        	DNode<T> current = this.head;
+	            while ((int)current.getNext().getData() < (int)node.getData()) {
+	                current = current.getNext();
+	            }
+	            node.setNext(current.getNext());
+	            current.setNext(node);
+	            this.size++;
+	        }
 		}
 	
 //		- Search(node)
 //		o Looks up node in the list
 //		▪ If found it returns the object
 //		▪ Otherwise returns null
-		public Node<T> search(Node<T> node) {
+		public DNode<T> search(DNode<T> node) {
 			if (node == this.head) {
 				return this.head;
 			}else if (node == this.tail) {
 				return this.tail;
 			}else {
-				Node<T> current = this.head;
+				DNode<T> current = this.head;
 				while(current != null) {
 					if(node == current) {
 						return current;
@@ -132,7 +154,7 @@ public class SinglyLinkedList<T> {
 					this.head = null;
 					this.tail = null;
 				}else {
-					Node current = this.head;
+					DNode<T> current = this.head;
 					while(current.getNext() != tail) {
 						current = current.getNext();
 					}
@@ -145,14 +167,14 @@ public class SinglyLinkedList<T> {
 	
 //		- Delete(node)
 //		o Deletes the node if found in the list
-		public void delete(Node<T> node) {
+		public void delete(DNode<T> node) {
 			if(this.head != null) {
 				if(this.head == node) {
 					deleteHead();
 				}else if(this.tail == node) {
 					deleteTail();
 				}else {
-					Node<T> current = this.head;
+					DNode<T> current = this.head;
 					while(current.getNext() != node) {
 						current = current.getNext();
 					}
@@ -169,7 +191,31 @@ public class SinglyLinkedList<T> {
 //		o Note that the sort method and SortedInsert can use each other to efficiently
 //		reduce code redundancy (not mandatory)
 		public void sort() {
-			
+			if (this.size <= 1) {
+	            return;
+	        }
+			DNode<T> newHead = null;
+	        while (this.head != null) {
+	        	DNode<T> node = this.head;
+	            this.head = node.getNext();
+	            if (newHead == null || (int)node.getData() < (int)newHead.getData()) {
+	                node.setNext(newHead);
+	                newHead = node;
+	            } else {
+	            	DNode<T> current = newHead;
+	                while (current.getNext() != null && (int)node.getData() > (int)current.getNext().getData()) {
+	                    current = current.getNext();
+	                }
+	                node.setNext(current.getNext());
+	                current.setNext(node);
+	            }
+	        }
+	        this.head = newHead;
+	        DNode<T> current = this.head;
+	        while (current.getNext() != null) {
+	            current = current.getNext();
+	        }
+	        this.tail = current;
 		}
 	
 //		- Clear()
@@ -188,6 +234,28 @@ public class SinglyLinkedList<T> {
 //		▪ Make sure to show information with relevant print statements to be
 //		readable by the user
 		public void print() {
-			
+			System.out.println("List length: " + this.size);
+	        System.out.println("Sorted status: " + this.isSorted());
+	        System.out.println("List content:");
+	        DNode<T> current = this.head;
+	        while (current != null) {
+	            System.out.print(current.getData() + " ");
+	            current = current.getNext();
+	        }
+	        System.out.println();
 		}
+		
+		private boolean isSorted() {
+	        if (this.size <= 1) {
+	            return true;
+	        }
+	        DNode<T> current = this.head;
+	        while (current.getNext() != null) {
+	            if ((int)current.getData() > (int)current.getNext().getData()) {
+	                return false;
+	            }
+	            current = current.getNext();
+	        }
+	        return true;
+	    }
 }

@@ -1,11 +1,11 @@
-package main.java.mylib.datastructures.linear;
+package main.java.mylib.datastructures.nodes;
 
-public class Node<T> {
+public class DNode<T> {
     public T data;
-    public Node<T> next;
-    public Node<T> prev;
+    public DNode<T> next;
+    public DNode<T> prev;
 
-    public Node(T data) {
+    public DNode(T data) {
         this.data = data;
         this.next = null;
         this.prev = null;
@@ -15,19 +15,19 @@ public class Node<T> {
     	return this.data;
     }
     
-    public Node<T> getNext() {
+    public DNode<T> getNext() {
     	return this.next;
     }
     
-    public Node<T> getPrev() {
+    public DNode<T> getPrev() {
     	return this.prev;
     }
     
-    public void setNext(Node<T> node) {
+    public void setNext(DNode<T> node) {
     	this.next = node;
     }
     
-    public void setPrev(Node<T> node) {
+    public void setPrev(DNode<T> node) {
     	this.prev = node;
     }
 }
