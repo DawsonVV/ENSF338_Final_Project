@@ -26,6 +26,14 @@ public class TNode {
         this.right = right;
     }
 
+    public TNode(int data) {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+        this.parent = null;
+        this.balance = 0;
+    }
+
     // Getters
     public int getData() {
         return data;
