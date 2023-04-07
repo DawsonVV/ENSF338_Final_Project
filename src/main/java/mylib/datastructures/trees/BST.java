@@ -1,4 +1,5 @@
 package main.java.mylib.datastructures.trees;
+import main.java.mylib.datastructures.nodes.TNode;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -163,9 +164,13 @@ public class BST {
             System.out.println();
         }
     }
+
+    private TNode minimum(TNode node) {
+        while (node.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node;
+    }
     
-
-
-
 }
            
