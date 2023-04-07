@@ -42,8 +42,11 @@ public class SinglyLinkedList<T> {
 				current = current.getNext();
 				this.size ++;
 			}
+			if(this.tail == null) {
+				this.tail = current;
+			}
 			current.setNext(this.head);
-			this.head = current;
+			this.head = node;
 		}
 	
 //		- InsertTail(node)
@@ -55,6 +58,9 @@ public class SinglyLinkedList<T> {
 			while(current.getNext() != null) {
 				current = current.getNext();
 				this.size ++;
+			}
+			if(this.head == null) {
+				this.head = node;
 			}
 			this.tail = current;
 			
@@ -138,11 +144,16 @@ public class SinglyLinkedList<T> {
 //		o Delete head node
 		public void deleteHead() {
 			if (this.head != null) {
-				this.head = this.head.getNext();
-				this.size --;
-				if(this.head == null) {
+				if(this.head.getNext() == null) {
+					this.head = null;
 					this.tail = null;
+				}else {
+					this.head = this.head.getNext();
+					if(this.head == null) {
+						this.tail = null;
+					}
 				}
+				this.size --;
 			}
 		}
 	
