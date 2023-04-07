@@ -161,8 +161,103 @@ public class AVL extends BST {
         balanceTree(node);
     }
 
+    public void Delete(int val) {
+        root = deleteNode(root, val);
+    }
     
-
+    private TNode deleteNode(TNode root, int val) {
+        if (root == null) {
+            System.out.println("Value not found in the tree.");
+            return root;
+        }
+        
+        // If the value to be deleted is smaller than the root's value,
+        // then it lies in the left subtree.
+        if (val < root.getData()) {
+            root.setLeft(deleteNode(root.getLeft(), val));
+        } 
+        // If the value to be deleted is greater than the root's value,
+        // then it lies in the right subtree.
+        else if (val > root.getData()) {
+            root.setRight(deleteNode(root.getRight(), val));
+        } 
+        // If the value to be deleted is equal to the root's value,
+        // then this is the node to be deleted.
+        else {
+            // Node with only one child or no child
+            if ((root.getLeft() == null) || (root.getRight() == null)) {
+                TNode temp = null;
+                if (temp == root.getLeft()) {
+                    temp = root.getRight();
+                } else {
+                    temp = root.getLeft();
+                }
+                
+                // No child case
+                if (temp == null) {
+                    temp = root;
+                    root = null;
+                } 
+                // One child case
+                else {
+                    root = temp; // Copy the contents of the non-empty child
+                }
+                
+                temp = null;
+            } 
+            // Node with two children: Get the inorder successor (smallest
+            // in the right subtree)
+            else {
+                TNode temp = minValueNode(root.getRight());
+                
+                // Copy the inorder successor's data to this node
+                root.setData(temp.getData());
+                
+                // Delete the inorder successor
+                root.setRight(deleteNode(root.getRight(), temp.getData()));
+            }
+        }
+        
+        // If the tree had only one node then return
+        if (root == null) {
+            return root;
+        }
     
-
+        // Update the balance factor of the root node
+        root.setBalance(height(root.getLeft()) - height(root.getRight()));
+        
+        // Check if this node is unbalanced and if so, balance it
+        if (root.getBalance() > 1 && root.getLeft().getBalance() >= 0) {
+            return rightRotate(root);
+        }
+        if (root.getBalance() > 1 && root.getLeft().getBalance() < 0) {
+            root.setLeft(leftRotate(root.getLeft()));
+            return rightRotate(root);
+        }
+        if (root.getBalance() < -1 && root.getRight().getBalance() <= 0) {
+            return leftRotate(root);
+        }
+        if (root.getBalance() < -1 && root.getRight().getBalance() > 0) {
+            root.setRight(rightRotate(root.getRight()));
+            return leftRotate(root);
+        }
+    
+        return root;
+    }
+    
+    private TNode minValueNode(TNode node) {
+        TNode current = node;
+        while (current.getLeft() != null) {
+            current = current.getLeft();
+        }
+        return current;
+    }
+    
+    private int height(TNode node) {
+        if (node == null) {
+            return 0;
+        }
+        return 1 + Math.max(height(node.getLeft()), height(node.getRight()));
+    }
+    
 }
