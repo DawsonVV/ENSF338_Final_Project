@@ -7,19 +7,17 @@ public class SinglyLinkedList<T> {
 //		This is a Singly Linked List Data structure that will implement the following:
 //		- Uses a head object of the base class Node (to be implemented as part of the base classes
 //		mentioned previously) and a tail object to keep track of the end of the list
-		private DNode<T> head;
-		private DNode<T> tail;
+		protected DNode<T> head = null;
+		protected DNode<T> tail = null;
 //		- Has an integer member variable to keep track of the size of the List (update when
 //		necessary)
-		private int size = 0;
+		protected int size = 0;
 	
 //		- 2 constructors:
 //		o Default constructor with no arguments that creates a null head object
 //		o Overload constructor with a Node object argument to use as head
 //		o You may combine both using default arguments if you prefer to
 		public SinglyLinkedList() {
-			this.head = null;
-			this.tail = null;
 		}
 		
 		public SinglyLinkedList(DNode<T> node) {
@@ -96,27 +94,27 @@ public class SinglyLinkedList<T> {
 //		▪ Might need to implement a helper function isSorted(), or find a creative
 //		way to know if the list is sorted
 		public void sortedInsert(DNode<T> node) {
-			if (this.head == null) {
-	            this.head = node;
-	            this.tail = node;
-	            this.size++;
-	        } else if ((int)node.getData() <= (int)this.head.getData()) {
-	            node.setNext(this.head);
-	            this.head = node;
-	            this.size++;
-	        } else if ((int)node.getData() >= (int)this.tail.getData()) {
-	            this.tail.setNext(node);
-	            this.tail = node;
-	            this.size++;
-	        } else {
-	        	DNode<T> current = this.head;
-	            while ((int)current.getNext().getData() < (int)node.getData()) {
-	                current = current.getNext();
-	            }
-	            node.setNext(current.getNext());
-	            current.setNext(node);
-	            this.size++;
-	        }
+//			if (this.head == null) {
+//	            this.head = node;
+//	            this.tail = node;
+//	            this.size++;
+//	        } else if (Integer.parseInt((String)node.getData()) <= Integer.parseInt((String)this.head.getData())) {
+//	            node.setNext(this.head);
+//	            this.head = node;
+//	            this.size++;
+//	        } else if (Integer.parseInt((String)node.getData()) >= Integer.parseInt((String)this.tail.getData())) {
+//	            this.tail.setNext(node);
+//	            this.tail = node;
+//	            this.size++;
+//	        } else {
+//	        	DNode<T> current = this.head;
+//	            while (Integer.parseInt((String)current.getNext().getData()) < Integer.parseInt((String)node.getData())) {
+//	                current = current.getNext();
+//	            }
+//	            node.setNext(current.getNext());
+//	            current.setNext(node);
+//	            this.size++;
+//	        }
 		}
 	
 //		- Search(node)
@@ -185,9 +183,13 @@ public class SinglyLinkedList<T> {
 				}else if(this.tail == node) {
 					deleteTail();
 				}else {
-					DNode<T> current = this.head;
+					DNode<T> current = this.head.getNext();
 					while(current.getNext() != node) {
+						if(current.getNext() == null) {
+							return;
+						}
 						current = current.getNext();
+						
 					}
 					current.setNext(node.getNext());
 					this.size--;
@@ -209,12 +211,12 @@ public class SinglyLinkedList<T> {
 	        while (this.head != null) {
 	        	DNode<T> node = this.head;
 	            this.head = node.getNext();
-	            if (newHead == null || (int)node.getData() < (int)newHead.getData()) {
+	            if (newHead == null || Integer.parseInt((String)node.getData()) < Integer.parseInt((String)newHead.getData())) {
 	                node.setNext(newHead);
 	                newHead = node;
 	            } else {
 	            	DNode<T> current = newHead;
-	                while (current.getNext() != null && (int)node.getData() > (int)current.getNext().getData()) {
+	                while (current.getNext() != null && Integer.parseInt((String)node.getData()) > Integer.parseInt((String)current.getNext().getData())) {
 	                    current = current.getNext();
 	                }
 	                node.setNext(current.getNext());
@@ -256,13 +258,13 @@ public class SinglyLinkedList<T> {
 	        System.out.println();
 		}
 		
-		private boolean isSorted() {
+		protected boolean isSorted() {
 	        if (this.size <= 1) {
 	            return true;
 	        }
 	        DNode<T> current = this.head;
 	        while (current.getNext() != null) {
-	            if ((int)current.getData() > (int)current.getNext().getData()) {
+	            if (Integer.parseInt((String)current.getData()) > Integer.parseInt((String)current.getNext().getData())) {
 	                return false;
 	            }
 	            current = current.getNext();
