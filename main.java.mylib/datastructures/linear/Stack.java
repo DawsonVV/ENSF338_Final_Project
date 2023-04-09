@@ -21,7 +21,7 @@ public class Stack<T> extends SinglyLinkedList<T>{
 		}
 		
 		public Stack(DNode<T> node) {
-			super();
+			super(node);
 		}
 		
 		public void push(DNode<T> node) {
