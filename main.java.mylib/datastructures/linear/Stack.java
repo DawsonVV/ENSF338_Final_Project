@@ -30,8 +30,14 @@ public class Stack<T> extends SinglyLinkedList<T>{
 		
 		public DNode<T> pop(){
 			DNode<T> temp = super.head;
-			super.deleteHead();
+			if (temp != null) {
+				super.deleteHead();
+			}
 			return temp;
+		}
+		
+		public DNode<T> peek(){
+			return super.head;
 		}
 		
 		public boolean empty() {
