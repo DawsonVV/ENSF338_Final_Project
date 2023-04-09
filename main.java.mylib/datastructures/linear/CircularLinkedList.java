@@ -73,26 +73,21 @@ public class CircularLinkedList<T> extends SinglyLinkedList<T>{
 //			▪ Might need to implement a helper function isSorted(), or find a creative
 //			way to know if the list is sorted
 			public void sortedInsert(DNode<T> node) {
-				if (super.head == null) {
-		            super.head = node;
-		            super.tail = node;
-		            super.size++;
-		        } else if (Integer.parseInt((String)node.getData()) <= Integer.parseInt((String)super.head.getData())) {
-		            node.setNext(super.head);
-		            super.head = node;
-		            super.size++;
-		        } else if (Integer.parseInt((String)node.getData()) >= Integer.parseInt((String)super.tail.getData())) {
-		            super.tail.setNext(node);
-		            super.tail = node;
-		            super.size++;
+				if (!isSorted()) {
+		            sort();
+		        }
+		        if (head == null || Integer.parseInt((String)node.getData()) < Integer.parseInt((String)head.getData())) {
+		            insertHead(node);
+		        } else if (Integer.parseInt((String)node.getData()) > Integer.parseInt((String)tail.getData())) {
+		            insertTail(node);
 		        } else {
-		        	DNode<T> current = super.head;
-		            while (Integer.parseInt((String)current.getNext().getData()) < Integer.parseInt((String)node.getData())) {
+		            DNode<T> current = head;
+		            while (current.getNext() != null && Integer.parseInt((String)current.getNext().getData()) < Integer.parseInt((String)node.getData())) {
 		                current = current.getNext();
 		            }
 		            node.setNext(current.getNext());
 		            current.setNext(node);
-		            super.size++;
+		            size++;
 		        }
 			}
 		

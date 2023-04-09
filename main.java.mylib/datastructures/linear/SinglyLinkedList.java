@@ -30,6 +30,10 @@ public class SinglyLinkedList<T> {
 			}
 			this.tail = current;
 		}
+		
+		public int getSize() {
+			return this.size;
+		}
 	
 //		- InsertHead(node)
 //		o Inserts node object at head of the list
@@ -73,7 +77,7 @@ public class SinglyLinkedList<T> {
 			}else if(position == size + 1) {
 				insertTail(node);
 			}else {
-				DNode<T> current = node;
+				DNode<T> current = this.head;
 				for (int i = 0; i < position - 1; i++) {
 	                current = current.getNext();
 	            }
@@ -94,27 +98,22 @@ public class SinglyLinkedList<T> {
 //		▪ Might need to implement a helper function isSorted(), or find a creative
 //		way to know if the list is sorted
 		public void sortedInsert(DNode<T> node) {
-//			if (this.head == null) {
-//	            this.head = node;
-//	            this.tail = node;
-//	            this.size++;
-//	        } else if (Integer.parseInt((String)node.getData()) <= Integer.parseInt((String)this.head.getData())) {
-//	            node.setNext(this.head);
-//	            this.head = node;
-//	            this.size++;
-//	        } else if (Integer.parseInt((String)node.getData()) >= Integer.parseInt((String)this.tail.getData())) {
-//	            this.tail.setNext(node);
-//	            this.tail = node;
-//	            this.size++;
-//	        } else {
-//	        	DNode<T> current = this.head;
-//	            while (Integer.parseInt((String)current.getNext().getData()) < Integer.parseInt((String)node.getData())) {
-//	                current = current.getNext();
-//	            }
-//	            node.setNext(current.getNext());
-//	            current.setNext(node);
-//	            this.size++;
-//	        }
+			if (!isSorted()) {
+	            sort();
+	        }
+	        if (head == null || Integer.parseInt(String.valueOf(node.getData())) < Integer.parseInt(String.valueOf(head.getData()))) {
+	            insertHead(node);
+	        } else if (Integer.parseInt(String.valueOf(node.getData())) > Integer.parseInt(String.valueOf(tail.getData()))) {
+	            insertTail(node);
+	        } else {
+	            DNode<T> current = head;
+	            while (current.getNext() != null && Integer.parseInt(String.valueOf(current.getNext().getData())) < Integer.parseInt(String.valueOf(node.getData()))) {
+	                current = current.getNext();
+	            }
+	            node.setNext(current.getNext());
+	            current.setNext(node);
+	            size++;
+	        }
 		}
 	
 //		- Search(node)
@@ -211,12 +210,12 @@ public class SinglyLinkedList<T> {
 	        while (this.head != null) {
 	        	DNode<T> node = this.head;
 	            this.head = node.getNext();
-	            if (newHead == null || Integer.parseInt((String)node.getData()) < Integer.parseInt((String)newHead.getData())) {
+	            if (newHead == null || Integer.parseInt(String.valueOf(node.getData())) < Integer.parseInt(String.valueOf(newHead.getData()))) {
 	                node.setNext(newHead);
 	                newHead = node;
 	            } else {
 	            	DNode<T> current = newHead;
-	                while (current.getNext() != null && Integer.parseInt((String)node.getData()) > Integer.parseInt((String)current.getNext().getData())) {
+	                while (current.getNext() != null && Integer.parseInt(String.valueOf(node.getData())) > Integer.parseInt(String.valueOf(current.getNext().getData()))) {
 	                    current = current.getNext();
 	                }
 	                node.setNext(current.getNext());
@@ -264,7 +263,7 @@ public class SinglyLinkedList<T> {
 	        }
 	        DNode<T> current = this.head;
 	        while (current.getNext() != null) {
-	            if (Integer.parseInt((String)current.getData()) > Integer.parseInt((String)current.getNext().getData())) {
+	            if (Integer.parseInt(String.valueOf(current.getData())) > Integer.parseInt(String.valueOf(current.getNext().getData()))) {
 	                return false;
 	            }
 	            current = current.getNext();
