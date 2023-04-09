@@ -26,14 +26,6 @@ public class TNode {
         this.right = right;
     }
 
-    public TNode(int data) {
-        this.data = data;
-        this.left = null;
-        this.right = null;
-        this.parent = null;
-        this.balance = 0;
-    }
-
     // Getters
     public int getData() {
         return data;
@@ -78,11 +70,19 @@ public class TNode {
 
     // Print node information
     public void print() {
-        System.out.println("Data: " + data + ", " + "Balance: " + balance);
+        System.out.println("Data: " + getData() + ", " + "Balance: " + getBalance());
     }
 
     // Return data member as a string
     public String toString() {
         return Integer.toString(data);
+    }
+
+    public void decrementBalance() {
+        this.balance--;
+    }
+
+    public void incrementBalance() {
+        this.balance++;
     }
 }

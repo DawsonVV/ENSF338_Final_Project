@@ -1,263 +1,225 @@
 package main.java.mylib.datastructures.trees;
 
 import main.java.mylib.datastructures.nodes.TNode;
+import java.util.*;
 
 public class AVL extends BST {
     private TNode root;
-    
+
+    public TNode getRoot() {
+        return root;
+    }
+
+    public void setRoot(TNode root) {
+        if (root == null) {
+            return;
+        }
+
+        this.root = root;
+
+        if (root.getLeft() != null || root.getRight() != null) {
+            avlCreator(root);
+        }
+    }
+
     public AVL() {
         root = null;
     }
 
     public AVL(int val) {
-        this.root = new TNode(val);
+        setRoot(new TNode(val, 0, null, null, null));
     }
 
     public AVL(TNode obj) {
-        root = obj;
-        root.setParent(null);
-        balanceTree(root);
-    }
-    
-    private void balanceTree(TNode node) {
-        if (node == null) {
+
+        if (obj == null) {
             return;
         }
-    
-        int balance = calculateBalance(node);
-        node.setBalance(balance);
-    
-        if (balance > 1) {
-            if (calculateBalance(node.getLeft()) > 0) {
-                node = rightRotate(node);
-            } else {
-                node.setLeft(leftRotate(node.getLeft()));
-                node = rightRotate(node);
-            }
-        } else if (balance < -1) {
-            if (calculateBalance(node.getRight()) < 0) {
-                node = leftRotate(node);
-            } else {
-                node.setRight(rightRotate(node.getRight()));
-                node = leftRotate(node);
+
+        this.root = new TNode(obj.getData(), 0, null, null, null);
+
+        if (hasChildren(obj)) {
+            avlCreator(obj);
+        }
+    }
+
+    private boolean hasChildren(TNode node) {
+        return node.getLeft() != null || node.getRight() != null;
+    }
+
+    private void avlCreator(TNode bstRoot) {
+        Queue<TNode> queue = new LinkedList<>();
+        queue.add(bstRoot);
+
+        for (TNode child : new TNode[] { bstRoot.getLeft(), bstRoot.getRight() }) {
+            if (child != null) {
+                queue.add(child);
             }
         }
+
+        queue.remove();
+
+        while (!queue.isEmpty()) {
+            TNode current = queue.remove();
+            TNode avlNode = new TNode(current.getData(), 0, null, null, null);
+            insert(avlNode);
+
+            for (TNode child : new TNode[] { current.getLeft(), current.getRight() }) {
+                if (child != null) {
+                    queue.add(child);
+                }
+            }
+        }
+    }
+
+    public void insert(TNode nodeToInsert) {
+        root = insertNode(root, nodeToInsert, null, null);
+    }
     
-        if (node.getParent() != null) {
-            balanceTree(node.getParent());
+    private TNode insertNode(TNode current, TNode nodeToInsert, TNode parent, TNode pivot) {
+        if (current == null) {
+            // If current node is null, insert the new node here
+            nodeToInsert.setParent(parent);
+            if (getRoot() == null) {
+                // If the tree was empty, the new node becomes the root
+                this.root = nodeToInsert;
+            } else {
+                // Otherwise, set the new node as left or right child of parent
+                if (parent.getData() > nodeToInsert.getData()) {
+                    parent.setLeft(nodeToInsert);
+                } else {
+                    parent.setRight(nodeToInsert);
+                }
+            }
+            // Perform rebalancing if necessary
+            rebalance(nodeToInsert, pivot);
+            return nodeToInsert;
+        }
+        if (current.getData() > nodeToInsert.getData()) {
+            // If node to insert is lower than current, insert it in the left subtree
+            current.setLeft(insertNode(current.getLeft(), nodeToInsert, current, current.getBalance() != 0 ? current : pivot));
         } else {
-            root = node;
+            // If node to insert is higher than current, insert it in the right subtree
+            current.setRight(insertNode(current.getRight(), nodeToInsert, current, current.getBalance() != 0 ? current : pivot));
         }
-    }
-    
-    private int calculateBalance(TNode node) {
-        if (node == null) {
-            return 0;
-        }
-        return getHeight(node.getLeft()) - getHeight(node.getRight());
-    }
-    
-    private int getHeight(TNode node) {
-        if (node == null) {
-            return -1;
-        }
-        return 1 + Math.max(getHeight(node.getLeft()), getHeight(node.getRight()));
-    }
-    
-    private TNode rightRotate(TNode node) {
-        TNode newRoot = node.getLeft();
-        node.setLeft(newRoot.getRight());
-        if (newRoot.getRight() != null) {
-            newRoot.getRight().setParent(node);
-        }
-        newRoot.setRight(node);
-        newRoot.setParent(node.getParent());
-        node.setParent(newRoot);
-        node.setBalance(calculateBalance(node));
-        newRoot.setBalance(calculateBalance(newRoot));
-        return newRoot;
-    }
-    
-    private TNode leftRotate(TNode node) {
-        TNode newRoot = node.getRight();
-        node.setRight(newRoot.getLeft());
-        if (newRoot.getLeft() != null) {
-            newRoot.getLeft().setParent(node);
-        }
-        newRoot.setLeft(node);
-        newRoot.setParent(node.getParent());
-        node.setParent(newRoot);
-        node.setBalance(calculateBalance(node));
-        newRoot.setBalance(calculateBalance(newRoot));
-        return newRoot;
-    }
-    
-    private TNode createAVLTree(TNode node) {
-        if (node == null) {
-            return null;
-        }
-        TNode newRoot = new TNode(node.getData(), node.getBalance(), null, null, null);
-        newRoot.setLeft(createAVLTree(node.getLeft()));
-        newRoot.setRight(createAVLTree(node.getRight()));
-        balanceTree(newRoot);
-        return newRoot;
-    }
-    
-    public void setRoot(TNode node) {
-        root = new TNode(node.getData(), node.getBalance(), null, null, null);
-        if (node.getLeft() != null || node.getRight() != null) {
-            root.setLeft(createAVLTree(node.getLeft()));
-            root.setRight(createAVLTree(node.getRight()));
-        }
-        balanceTree(root);
+        // Return the current node with updated left or right child
+        return current;
     }
 
     public void insert(int val) {
-        TNode newNode = new TNode(val);
-        if (root == null) {
-            root = newNode;
-        } else {
-            TNode curr = root;
-            TNode parent = null;
-            while (curr != null) {
-                parent = curr;
-                if (val < curr.getData()) {
-                    curr = curr.getLeft();
-                } else {
-                    curr = curr.getRight();
-                }
-            }
-            newNode.setParent(parent);
-            if (val < parent.getData()) {
-                parent.setLeft(newNode);
+        TNode newNode = new TNode(val, 0, null, null, null);
+        if (getRoot() == null) {
+            setRoot(newNode);
+            return;
+        }
+        TNode parent = null;
+        TNode current = getRoot();
+        while (current != null) {
+            parent = current;
+            if (val < current.getData()) {
+                current = current.getLeft();
+            } else if (val > current.getData()) {
+                current = current.getRight();
             } else {
-                parent.setRight(newNode);
+                return; // Duplicate value not allowed
             }
         }
-        balanceTree(newNode);
-    }
-
-    public void insert(TNode node) {
-        if (root == null) {
-            root = node;
+        if (val < parent.getData()) {
+            parent.setLeft(newNode);
         } else {
-            TNode curr = root;
-            TNode parent = null;
-            while (curr != null) {
-                parent = curr;
-                if (node.getData() < curr.getData()) {
-                    curr = curr.getLeft();
-                } else {
-                    curr = curr.getRight();
-                }
-            }
-            node.setParent(parent);
-            if (node.getData() < parent.getData()) {
-                parent.setLeft(node);
-            } else {
-                parent.setRight(node);
-            }
+            parent.setRight(newNode);
         }
-        balanceTree(node);
+        newNode.setParent(parent);
+        rebalance(getRoot(), newNode);
     }
+    
 
-    public void Delete(int val) {
-        root = deleteNode(root, val);
-    }
-    
-    private TNode deleteNode(TNode root, int val) {
-        if (root == null) {
-            System.out.println("Value not found in the tree.");
-            return root;
-        }
-        
-        // If the value to be deleted is smaller than the root's value,
-        // then it lies in the left subtree.
-        if (val < root.getData()) {
-            root.setLeft(deleteNode(root.getLeft(), val));
-        } 
-        // If the value to be deleted is greater than the root's value,
-        // then it lies in the right subtree.
-        else if (val > root.getData()) {
-            root.setRight(deleteNode(root.getRight(), val));
-        } 
-        // If the value to be deleted is equal to the root's value,
-        // then this is the node to be deleted.
-        else {
-            // Node with only one child or no child
-            if ((root.getLeft() == null) || (root.getRight() == null)) {
-                TNode temp = null;
-                if (temp == root.getLeft()) {
-                    temp = root.getRight();
-                } else {
-                    temp = root.getLeft();
-                }
-                
-                // No child case
-                if (temp == null) {
-                    temp = root;
-                    root = null;
-                } 
-                // One child case
-                else {
-                    root = temp; // Copy the contents of the non-empty child
-                }
-                
-                temp = null;
-            } 
-            // Node with two children: Get the inorder successor (smallest
-            // in the right subtree)
-            else {
-                TNode temp = minValueNode(root.getRight());
-                
-                // Copy the inorder successor's data to this node
-                root.setData(temp.getData());
-                
-                // Delete the inorder successor
-                root.setRight(deleteNode(root.getRight(), temp.getData()));
+    public void rebalance(TNode nodeToInsert, TNode pivot) {
+        if (pivot == null) {
+            updateBalances(nodeToInsert, null);
+        } else if (nodeToInsert.getData() < pivot.getData()) {
+            if (pivot.getBalance() == -1) {
+                rotateRight(pivot);
+                updateBalances(nodeToInsert, pivot.getParent());
+            } else if (pivot.getBalance() == 1) {
+                rotateLeft(pivot.getLeft());
+                rotateRight(pivot);
+                updateBalances(nodeToInsert, pivot.getParent());
+            } else {
+                pivot.decrementBalance();
+                rebalance(nodeToInsert, pivot.getParent());
+            }
+        } else {
+            if (pivot.getBalance() == 1) {
+                rotateLeft(pivot);
+                updateBalances(nodeToInsert, pivot.getParent());
+            } else if (pivot.getBalance() == -1) {
+                rotateRight(pivot.getRight());
+                rotateLeft(pivot);
+                updateBalances(nodeToInsert, pivot.getParent());
+            } else {
+                pivot.incrementBalance();
+                rebalance(nodeToInsert, pivot.getParent());
             }
         }
-        
-        // If the tree had only one node then return
-        if (root == null) {
-            return root;
-        }
-    
-        // Update the balance factor of the root node
-        root.setBalance(height(root.getLeft()) - height(root.getRight()));
-        
-        // Check if this node is unbalanced and if so, balance it
-        if (root.getBalance() > 1 && root.getLeft().getBalance() >= 0) {
-            return rightRotate(root);
-        }
-        if (root.getBalance() > 1 && root.getLeft().getBalance() < 0) {
-            root.setLeft(leftRotate(root.getLeft()));
-            return rightRotate(root);
-        }
-        if (root.getBalance() < -1 && root.getRight().getBalance() <= 0) {
-            return leftRotate(root);
-        }
-        if (root.getBalance() < -1 && root.getRight().getBalance() > 0) {
-            root.setRight(rightRotate(root.getRight()));
-            return leftRotate(root);
-        }
-    
-        return root;
     }
     
-    private TNode minValueNode(TNode node) {
-        TNode current = node;
-        while (current.getLeft() != null) {
-            current = current.getLeft();
+    private void rotateRight(TNode node) {
+        TNode pivot = node.getLeft();
+        node.setLeft(pivot.getRight());
+        if (pivot.getRight() != null) {
+            pivot.getRight().setParent(node);
         }
-        return current;
+        pivot.setParent(node.getParent());
+        if (node.getParent() == null) {
+            root = pivot;
+        } else if (node.getParent().getLeft() == node) {
+            node.getParent().setLeft(pivot);
+        } else {
+            node.getParent().setRight(pivot);
+        }
+        pivot.setRight(node);
+        node.setParent(pivot);
+        pivot.setBalance(0);
+        node.setBalance(0);
     }
     
-    private int height(TNode node) {
-        if (node == null) {
-            return 0;
+    private void rotateLeft(TNode node) {
+        TNode pivot = node.getRight();
+        node.setRight(pivot.getLeft());
+        if (pivot.getLeft() != null) {
+            pivot.getLeft().setParent(node);
         }
-        return 1 + Math.max(height(node.getLeft()), height(node.getRight()));
+        pivot.setParent(node.getParent());
+        if (node.getParent() == null) {
+            root = pivot;
+        } else if (node.getParent().getLeft() == node) {
+            node.getParent().setLeft(pivot);
+        } else {
+            node.getParent().setRight(pivot);
+        }
+        pivot.setLeft(node);
+        node.setParent(pivot);
+        pivot.setBalance(0);
+        node.setBalance(0);
     }
     
+    private void updateBalances(TNode node, TNode stop) {
+        if (node == null || node == stop) {
+            return;
+        }
+        if (node.getParent() == stop) {
+            return;
+        }
+        if (node == node.getParent().getLeft()) {
+            node.getParent().decrementBalance();
+        } else {
+            node.getParent().incrementBalance();
+        }
+        updateBalances(node.getParent(), stop);
+    }
+    
+    
+    
+
 }
