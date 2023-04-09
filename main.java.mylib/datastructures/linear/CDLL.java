@@ -1,16 +1,16 @@
 package main.java.mylib.datastructures.linear;
 import main.java.mylib.datastructures.nodes.DNode;
-public class CircularDoublyLinkedList<T> extends DoublyLinkedList<T> {
+public class CDLL<T> extends DLL<T> {
 	
 			
 //				- 2 constructors:
 //				o Default constructor with no arguments that creates a null head object
 //				o Overload constructor with a Node object argument to use as head
 //				o You may combine both using default arguments if you prefer to
-		public CircularDoublyLinkedList() {
+		public CDLL() {
 		}
 		
-		public CircularDoublyLinkedList(DNode<T> node) {
+		public CDLL(DNode<T> node) {
 			node.setNext(node);
 			node.setPrev(node);
 			super.head = node;

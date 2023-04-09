@@ -2,17 +2,17 @@ package main.java.mylib.datastructures.linear;
 
 import main.java.mylib.datastructures.nodes.DNode;
 
-public class Queue<T> extends SinglyLinkedList<T>{
+public class QueueLL<T> extends SLL<T>{
 
 //	- 2 constructors:
 //	o Default constructor with no arguments that creates a null head object
 //	o Overload constructor with a Node object argument to use as head
 //	o You may combine both using default arguments if you prefer to
-	public Queue() {
+	public QueueLL() {
 		super();
 	}
 	
-	public Queue(DNode<T> node) {
+	public QueueLL(DNode<T> node) {
 		super(node);
 	}
 

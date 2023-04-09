@@ -1,16 +1,16 @@
 package main.java.mylib.datastructures.linear;
 import main.java.mylib.datastructures.nodes.DNode;
 
-public class CircularLinkedList<T> extends SinglyLinkedList<T>{
+public class CSLL<T> extends SLL<T>{
 		
 //			- 2 constructors:
 //			o Default constructor with no arguments that creates a null head object
 //			o Overload constructor with a Node object argument to use as head
 //			o You may combine both using default arguments if you prefer to
-			public CircularLinkedList() {
+			public CSLL() {
 			}
 			
-			public CircularLinkedList(DNode<T> node) {
+			public CSLL(DNode<T> node) {
 				node.setNext(node);
 				super.head = node;
 				super.size = 1;

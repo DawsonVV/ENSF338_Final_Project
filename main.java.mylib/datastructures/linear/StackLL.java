@@ -2,7 +2,7 @@ package main.java.mylib.datastructures.linear;
 
 import main.java.mylib.datastructures.nodes.DNode;
 
-public class Stack<T> extends SinglyLinkedList<T>{
+public class StackLL<T> extends SLL<T>{
 //		This is a Singly Linked List Data structure that will implement the following:
 //		- Uses a head object of the base class Node (to be implemented as part of the base classes
 //		mentioned previously) and a tail object to keep track of the end of the list
@@ -16,11 +16,11 @@ public class Stack<T> extends SinglyLinkedList<T>{
 //		o Default constructor with no arguments that creates a null head object
 //		o Overload constructor with a Node object argument to use as head
 //		o You may combine both using default arguments if you prefer to
-		public Stack() {
+		public StackLL() {
 			super();
 		}
 		
-		public Stack(DNode<T> node) {
+		public StackLL(DNode<T> node) {
 			super(node);
 		}
 		

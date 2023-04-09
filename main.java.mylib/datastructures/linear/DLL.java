@@ -2,7 +2,7 @@ package main.java.mylib.datastructures.linear;
 
 import main.java.mylib.datastructures.nodes.DNode;
 
-public class DoublyLinkedList<T> extends SinglyLinkedList<T>{
+public class DLL<T> extends SLL<T>{
 //		Uses a head and tail objects of the base class DNode (to be implemented as part of the
 //		base classes mentioned previously)
 
@@ -10,10 +10,10 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T>{
 //		o Default constructor needs to account for tail
 //		o Constructor overload with one node initializes the list with head and tail pointing
 //		to the same node
-		public DoublyLinkedList() {
+		public DLL() {
 		}
 		
-		public DoublyLinkedList(DNode<T> node) {
+		public DLL(DNode<T> node) {
 			super.head = node;
 			super.size = 1;
 			super.tail = node;

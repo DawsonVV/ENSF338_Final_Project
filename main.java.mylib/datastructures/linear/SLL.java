@@ -2,7 +2,7 @@ package main.java.mylib.datastructures.linear;
 
 import main.java.mylib.datastructures.nodes.DNode;
 
-public class SinglyLinkedList<T> {
+public class SLL<T> {
 //	1. singlyLL:
 //		This is a Singly Linked List Data structure that will implement the following:
 //		- Uses a head object of the base class Node (to be implemented as part of the base classes
@@ -17,10 +17,10 @@ public class SinglyLinkedList<T> {
 //		o Default constructor with no arguments that creates a null head object
 //		o Overload constructor with a Node object argument to use as head
 //		o You may combine both using default arguments if you prefer to
-		public SinglyLinkedList() {
+		public SLL() {
 		}
 		
-		public SinglyLinkedList(DNode<T> node) {
+		public SLL(DNode<T> node) {
 			this.head = node;
 			DNode<T> current = node;
 			this.size = 1;
