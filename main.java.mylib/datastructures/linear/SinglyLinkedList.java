@@ -74,11 +74,11 @@ public class SinglyLinkedList<T> {
 		public void insert(DNode<T> node, int position) {
 			if (position == 1) {
 				insertHead(node);
-			}else if(position == size + 1) {
+			}else if(position == size + 1 && this.head != this.tail) {
 				insertTail(node);
 			}else {
 				DNode<T> current = this.head;
-				for (int i = 0; i < position - 1; i++) {
+				for (int i = 0; i < position-2; i++) {
 	                current = current.getNext();
 	            }
 				node.setNext(current.getNext());
@@ -103,7 +103,7 @@ public class SinglyLinkedList<T> {
 	        }
 	        if (head == null || Integer.parseInt(String.valueOf(node.getData())) < Integer.parseInt(String.valueOf(head.getData()))) {
 	            insertHead(node);
-	        } else if (Integer.parseInt(String.valueOf(node.getData())) > Integer.parseInt(String.valueOf(tail.getData()))) {
+	        } else if (Integer.parseInt(String.valueOf(node.getData())) > Integer.parseInt(String.valueOf(tail.getData()))&& this.head != this.tail) {
 	            insertTail(node);
 	        } else {
 	            DNode<T> current = head;
@@ -127,7 +127,7 @@ public class SinglyLinkedList<T> {
 				return this.tail;
 			}else {
 				DNode<T> current = this.head;
-				while(current != null) {
+				for(int i = 0; i < this.size;i++) {
 					if(node == current) {
 						return current;
 					}
@@ -182,16 +182,19 @@ public class SinglyLinkedList<T> {
 				}else if(this.tail == node) {
 					deleteTail();
 				}else {
-					DNode<T> current = this.head.getNext();
-					while(current.getNext() != node) {
+					DNode<T> current = this.head;
+					for (int i = 0;i<this.size-1;i++) {
 						if(current.getNext() == null) {
 							return;
+						}
+						if(current.getNext() == node) {
+							current.setNext(node.getNext());
+							this.size--;
 						}
 						current = current.getNext();
 						
 					}
-					current.setNext(node.getNext());
-					this.size--;
+					
 				}
 			}
 		}
@@ -247,10 +250,10 @@ public class SinglyLinkedList<T> {
 //		readable by the user
 		public void print() {
 			System.out.println("List length: " + this.size);
-	        System.out.println("Sorted status: " + this.isSorted());
+	        System.out.println("Sorted status: " + isSorted());
 	        System.out.println("List content:");
 	        DNode<T> current = this.head;
-	        while (current != null) {
+	        for(int i = 0; i<this.size;i++) {
 	            System.out.print(current.getData() + " ");
 	            current = current.getNext();
 	        }
@@ -262,7 +265,7 @@ public class SinglyLinkedList<T> {
 	            return true;
 	        }
 	        DNode<T> current = this.head;
-	        while (current.getNext() != null) {
+	        for (int i = 0;i<this.size-1;i++) {
 	            if (Integer.parseInt(String.valueOf(current.getData())) > Integer.parseInt(String.valueOf(current.getNext().getData()))) {
 	                return false;
 	            }

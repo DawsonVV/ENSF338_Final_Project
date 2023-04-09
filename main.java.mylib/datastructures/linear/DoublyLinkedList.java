@@ -66,6 +66,58 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T>{
 			
 		}
 	
+//		- Insert(node,position)
+//		o Inserts node object in the specified position
+//		▪ Ex. Insert(node ,5) → inserts node to 5th position in list
+		@Override
+		public void insert(DNode<T> node, int position) {
+			if (position == 1) {
+				insertHead(node);
+			}else if(position == size + 1 && this.head != this.tail) {
+				insertTail(node);
+			}else {
+				DNode<T> current = this.head;
+				for (int i = 0; i < position-2; i++) {
+	                current = current.getNext();
+	            }
+				node.setNext(current.getNext());
+				current.getNext().setPrev(node);
+				node.setPrev(current);
+				current.setNext(node);
+				size++;
+			}
+		}
+//		- SortedInsert(node)
+//		o Inserts node object in its proper position in a sorted list
+//		o Must check for list sort validity
+//		▪ If list is found to be out of order, it must call the sort function first before
+//		inserting
+//		▪ Note that you should only execute sort if the list is found to be out of order
+//		to avoid slowing down the insertion by executing sorting every time you
+//		insert
+//		▪ Might need to implement a helper function isSorted(), or find a creative
+//		way to know if the list is sorted
+		public void sortedInsert(DNode<T> node) {
+			if (!isSorted()) {
+	            sort();
+	        }
+	        if (head == null || Integer.parseInt(String.valueOf(node.getData())) < Integer.parseInt(String.valueOf(head.getData()))) {
+	            insertHead(node);
+	        } else if (Integer.parseInt(String.valueOf(node.getData())) > Integer.parseInt(String.valueOf(tail.getData()))&& this.head != this.tail) {
+	            insertTail(node);
+	        } else {
+	            DNode<T> current = head;
+	            while (current.getNext() != null && Integer.parseInt(String.valueOf(current.getNext().getData())) < Integer.parseInt(String.valueOf(node.getData()))) {
+	                current = current.getNext();
+	            }
+	            node.setNext(current.getNext());
+				current.getNext().setPrev(node);
+				node.setPrev(current);
+				current.setNext(node);
+	            size++;
+	        }
+		}
+		
 //		- DeleteHead()
 //		o Delete head node
 		@Override
@@ -108,16 +160,19 @@ public class DoublyLinkedList<T> extends SinglyLinkedList<T>{
 				}else if(super.tail == node) {
 					deleteTail();
 				}else {
-					DNode<T> current = super.head.getNext();
-					while(current.getNext() != node) {
+					DNode<T> current = this.head;
+					for (int i = 0;i<this.size-1;i++) {
 						if(current.getNext() == null) {
 							return;
 						}
+						if(current.getNext() == node) {
+							current.setNext(node.getNext());
+							node.getNext().setPrev(current);
+							super.size--;
+						}
 						current = current.getNext();
 					}
-					current.setNext(node.getNext());
-					node.getNext().setPrev(current);
-					super.size--;
+					
 				}
 			}
 		}
