@@ -1,225 +1,175 @@
 package main.java.mylib.datastructures.trees;
-
 import main.java.mylib.datastructures.nodes.TNode;
-import java.util.*;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class AVL extends BST {
-    private TNode root;
 
-    public TNode getRoot() {
-        return root;
+  TNode root;
+
+  public TNode getRoot() {
+    return root;
+  }
+  
+  public void setRoot(TNode root) {
+    if (root == null) {
+      return;
     }
-
-    public void setRoot(TNode root) {
-        if (root == null) {
-            return;
-        }
-
-        this.root = root;
-
-        if (root.getLeft() != null || root.getRight() != null) {
-            avlCreator(root);
-        }
+    this.root = root;
+    if (root.getLeft() != null || root.getRight() != null) {
+      constructAVL(root);
     }
+  }
 
-    public AVL() {
-        root = null;
+  public AVL() {
+    this.root = null;
+  }
+
+  public AVL(int val) {
+    this.root = (new TNode(val, 0, null, null, null));
+  }
+
+  public AVL(TNode obj) {
+    if (obj != null) {
+      this.root = new TNode(obj.getData(), 0, null, null, null);
+      constructAVL(obj);
     }
+  }
+  
+  private void constructAVL(TNode bstRoot) {
+    Queue<TNode> queue = new LinkedList<TNode>();
+    queue.add(bstRoot);
+  
+    do {
+      TNode current = queue.remove();
+      TNode avlNode = new TNode(current.getData(), 0, null, null, null);
+      insert(avlNode);
+  
+      if (current.getLeft() != null) {
+        queue.add(current.getLeft());
+      }
+      if (current.getRight() != null) {
+        queue.add(current.getRight());
+      }
+    } while (!queue.isEmpty());
+  }
+  
 
-    public AVL(int val) {
-        setRoot(new TNode(val, 0, null, null, null));
-    }
+public void insert(TNode nodeToInsert) {
+    insertHelper(nodeToInsert);
+}
 
-    public AVL(TNode obj) {
 
-        if (obj == null) {
-            return;
-        }
+public void insert(int val) {
+    TNode nodeToInsert = new TNode(val, 0, null, null, null);
+    insertHelper(nodeToInsert);
+}
 
-        this.root = new TNode(obj.getData(), 0, null, null, null);
+// Helper method for inserting a node into the tree
+private void insertHelper(TNode nodeToInsert) {
+    TNode current = getRoot();
+    TNode lastNode = null;
+    TNode pivot = null;
 
-        if (hasChildren(obj)) {
-            avlCreator(obj);
-        }
-    }
 
-    private boolean hasChildren(TNode node) {
-        return node.getLeft() != null || node.getRight() != null;
-    }
-
-    private void avlCreator(TNode bstRoot) {
-        Queue<TNode> queue = new LinkedList<>();
-        queue.add(bstRoot);
-
-        for (TNode child : new TNode[] { bstRoot.getLeft(), bstRoot.getRight() }) {
-            if (child != null) {
-                queue.add(child);
-            }
-        }
-
-        queue.remove();
-
-        while (!queue.isEmpty()) {
-            TNode current = queue.remove();
-            TNode avlNode = new TNode(current.getData(), 0, null, null, null);
-            insert(avlNode);
-
-            for (TNode child : new TNode[] { current.getLeft(), current.getRight() }) {
-                if (child != null) {
-                    queue.add(child);
-                }
-            }
-        }
-    }
-
-    public void insert(TNode nodeToInsert) {
-        root = insertNode(root, nodeToInsert, null, null);
-    }
-    
-    private TNode insertNode(TNode current, TNode nodeToInsert, TNode parent, TNode pivot) {
-        if (current == null) {
-            // If current node is null, insert the new node here
-            nodeToInsert.setParent(parent);
-            if (getRoot() == null) {
-                // If the tree was empty, the new node becomes the root
-                this.root = nodeToInsert;
-            } else {
-                // Otherwise, set the new node as left or right child of parent
-                if (parent.getData() > nodeToInsert.getData()) {
-                    parent.setLeft(nodeToInsert);
-                } else {
-                    parent.setRight(nodeToInsert);
-                }
-            }
-            // Perform rebalancing if necessary
-            rebalance(nodeToInsert, pivot);
-            return nodeToInsert;
+    while (current != null) {
+        lastNode = current;
+        if (current.getBalance() != 0) {
+            pivot = current;
         }
         if (current.getData() > nodeToInsert.getData()) {
-            // If node to insert is lower than current, insert it in the left subtree
-            current.setLeft(insertNode(current.getLeft(), nodeToInsert, current, current.getBalance() != 0 ? current : pivot));
+            current = current.getLeft();
         } else {
-            // If node to insert is higher than current, insert it in the right subtree
-            current.setRight(insertNode(current.getRight(), nodeToInsert, current, current.getBalance() != 0 ? current : pivot));
+            current = current.getRight();
         }
-        // Return the current node with updated left or right child
-        return current;
     }
 
-    public void insert(int val) {
-        TNode newNode = new TNode(val, 0, null, null, null);
-        if (getRoot() == null) {
-            setRoot(newNode);
-            return;
-        }
-        TNode parent = null;
-        TNode current = getRoot();
-        while (current != null) {
-            parent = current;
-            if (val < current.getData()) {
-                current = current.getLeft();
-            } else if (val > current.getData()) {
-                current = current.getRight();
-            } else {
-                return; // Duplicate value not allowed
-            }
-        }
-        if (val < parent.getData()) {
-            parent.setLeft(newNode);
-        } else {
-            parent.setRight(newNode);
-        }
-        newNode.setParent(parent);
-        rebalance(getRoot(), newNode);
+    if (lastNode == null) {
+        this.root = nodeToInsert; 
+    } else if (lastNode.getData() > nodeToInsert.getData()) {
+        lastNode.setLeft(nodeToInsert);
+    } else {
+        lastNode.setRight(nodeToInsert);
     }
-    
 
-    public void rebalance(TNode nodeToInsert, TNode pivot) {
-        if (pivot == null) {
-            updateBalances(nodeToInsert, null);
-        } else if (nodeToInsert.getData() < pivot.getData()) {
-            if (pivot.getBalance() == -1) {
-                rotateRight(pivot);
-                updateBalances(nodeToInsert, pivot.getParent());
-            } else if (pivot.getBalance() == 1) {
-                rotateLeft(pivot.getLeft());
-                rotateRight(pivot);
-                updateBalances(nodeToInsert, pivot.getParent());
-            } else {
-                pivot.decrementBalance();
-                rebalance(nodeToInsert, pivot.getParent());
-            }
-        } else {
-            if (pivot.getBalance() == 1) {
-                rotateLeft(pivot);
-                updateBalances(nodeToInsert, pivot.getParent());
-            } else if (pivot.getBalance() == -1) {
-                rotateRight(pivot.getRight());
-                rotateLeft(pivot);
-                updateBalances(nodeToInsert, pivot.getParent());
-            } else {
-                pivot.incrementBalance();
-                rebalance(nodeToInsert, pivot.getParent());
-            }
-        }
-    }
-    
-    private void rotateRight(TNode node) {
-        TNode pivot = node.getLeft();
-        node.setLeft(pivot.getRight());
-        if (pivot.getRight() != null) {
-            pivot.getRight().setParent(node);
-        }
-        pivot.setParent(node.getParent());
-        if (node.getParent() == null) {
-            root = pivot;
-        } else if (node.getParent().getLeft() == node) {
-            node.getParent().setLeft(pivot);
-        } else {
-            node.getParent().setRight(pivot);
-        }
-        pivot.setRight(node);
-        node.setParent(pivot);
-        pivot.setBalance(0);
-        node.setBalance(0);
-    }
-    
-    private void rotateLeft(TNode node) {
-        TNode pivot = node.getRight();
-        node.setRight(pivot.getLeft());
-        if (pivot.getLeft() != null) {
-            pivot.getLeft().setParent(node);
-        }
-        pivot.setParent(node.getParent());
-        if (node.getParent() == null) {
-            root = pivot;
-        } else if (node.getParent().getLeft() == node) {
-            node.getParent().setLeft(pivot);
-        } else {
-            node.getParent().setRight(pivot);
-        }
-        pivot.setLeft(node);
-        node.setParent(pivot);
-        pivot.setBalance(0);
-        node.setBalance(0);
-    }
-    
-    private void updateBalances(TNode node, TNode stop) {
-        if (node == null || node == stop) {
-            return;
-        }
-        if (node.getParent() == stop) {
-            return;
-        }
-        if (node == node.getParent().getLeft()) {
-            node.getParent().decrementBalance();
-        } else {
-            node.getParent().incrementBalance();
-        }
-        updateBalances(node.getParent(), stop);
-    }
-    
-    
-    
+    nodeToInsert.setParent(lastNode);
+    reOrder(nodeToInsert, pivot);
+}
 
+public void reOrder(TNode nodeToInsert, TNode pivot) {
+    if (pivot == null) {
+        // Adding to a subtree with all 0 balances
+        reOrderSubtree(nodeToInsert, null, null);
+    } else if (pivot.getBalance() == +1 && nodeToInsert.getData() < pivot.getData()
+            || pivot.getBalance() == -1 && nodeToInsert.getData() > pivot.getData()) {
+        // Adding to the shorter subtree
+        reOrderSubtree(nodeToInsert, pivot, null);
+    } else {
+        // Adding to the longer subtree
+        TNode ancestor = pivot.getParent();
+        TNode son = pivot.getBalance() == -1 ? pivot.getLeft() : pivot.getRight();
+        if (nodeToInsert.getData() < son.getData()) {
+            // Outside case 3a
+            rotateRight(pivot, son, ancestor, nodeToInsert);
+        } else {
+            // Case 3b: adding a node to the inside subtree
+            TNode grandson = son.getBalance() == +1 ? son.getRight() : son.getLeft();
+            rotateLeft(grandson, son);
+            rotateRight(pivot, grandson, ancestor, nodeToInsert);
+        }
+    }
+}
+
+private void reOrderSubtree(TNode node, TNode pivot, TNode stop) {
+    TNode current = node;
+    while (current != stop) {
+        if (current.getData() < pivot.getData()) {
+            pivot.incrementBalance();
+            pivot = pivot.getLeft();
+        } else {
+            pivot.decrementBalance();
+            pivot = pivot.getRight();
+        }
+        current = current.getParent();
+    }
+}
+
+private void rotateRight(TNode pivot, TNode son, TNode ancestor, TNode nodeToInsert) {
+    if (ancestor == null) {
+        son.setParent(null);
+        root = son;
+    } else if (nodeToInsert.getData() < ancestor.getData()) {
+        ancestor.setLeft(son);
+        son.setParent(ancestor);
+    } else {
+        ancestor.setRight(son);
+        son.setParent(ancestor);
+    }
+    pivot.setLeft(son.getRight());
+    if (pivot.getLeft() != null) {
+        pivot.getLeft().setParent(pivot);
+    }
+    son.setRight(pivot);
+    pivot.setParent(son);
+    pivot.setBalance(pivot.getBalance() == -1 ? 0 : -1);
+    son.setBalance(0);
+    reOrderSubtree(nodeToInsert, son, pivot);
+}
+
+private void rotateLeft(TNode pivot, TNode son) {
+    TNode grandson = son.getRight();
+    son.setRight(grandson.getLeft());
+    if (son.getRight() != null) {
+        son.getRight().setParent(son);
+    }
+    grandson.setLeft(son);
+    son.setParent(grandson);
+    son.setBalance(son.getBalance() == +1 ? 0 : +1);
+    grandson.setBalance(0);
+}
+
+
+
+  
 }
