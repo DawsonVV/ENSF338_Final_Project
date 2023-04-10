@@ -54,7 +54,7 @@ public class SLL<T> {
 //		- InsertTail(node)
 //		o Inserts node object at the tail of the list
 		public void insertTail(DNode<T> node) {
-			this.tail.setNext(node);
+			
 			DNode<T> current = node;
 			this.size ++;
 			while(current.getNext() != null) {
@@ -63,9 +63,11 @@ public class SLL<T> {
 			}
 			if(this.head == null) {
 				this.head = node;
+				this.tail = node;
+			}else {
+				this.tail.setNext(node);
+				this.tail = current;
 			}
-			this.tail = current;
-			
 		}
 	
 //		- Insert(node,position)
