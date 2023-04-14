@@ -128,32 +128,71 @@ public class QueueLL<T> extends SLL<T>{
 		DNode<Integer> node9 = new DNode<Integer>(2);
 		DNode<Integer> node10 = new DNode<Integer>(1);
 	
-		QueueLL<Integer> queue = new QueueLL<Integer>();
+		QueueLL<Integer> queue1 = new QueueLL<Integer>(node1);
 
-	    System.out.println("Stack is empty? " + queue.empty()); // true
+	    System.out.println("Stack is empty? " + queue1.empty());
+	    //Expected:
+	    //Stack is empty? false
 	    
-	    queue.enqueue(node10);
-	    queue.enqueue(node9);
-	    queue.enqueue(node8);
-
-	    System.out.println("Top element: " + queue.peek().getData()); // 1
-	    System.out.println("Stack size: " + queue.size()); // 3
-	    System.out.println("Stack is empty? " + queue.empty()); // false
+	    QueueLL<Integer> queue2 = new QueueLL<Integer>();
 	    
-	    DNode<Integer> get = queue.dequeue();
-	    System.out.println("released: " + get.getData()); // 1
+	    System.out.println("Stack is empty? " + queue2.empty());
+	    //Expected:
+	    //Stack is empty? true
 	    
-	    System.out.println("Top element: " + queue.peek().getData()); // 2
-	    System.out.println("Stack size: " + queue.size()); // 2
+	    queue2.enqueue(node10);
+	    queue2.enqueue(node9);
+	    queue2.enqueue(node8);
 
-	    queue.dequeue();
-	    queue.dequeue();
+	    System.out.println("Top element: " + queue2.peek().getData());
+	    //Expected:
+	    //Top element: 1
+	    
+	    System.out.println("Stack size: " + queue2.size());
+	    //Expected:
+	    //Stack size: 3
+	    
+	    System.out.println("Stack is empty? " + queue2.empty());
+	    //Expected:
+	    //Stack is empty? false
+	    
+	    DNode<Integer> get = queue2.dequeue();
+	    System.out.println("released: " + get.getData());
+	    //Expected:
+	    //released: 1
+	    
+	    System.out.println("Top element: " + queue2.peek().getData());
+	    //Expected:
+	    //Top element: 2
+	    
+	    System.out.println("Stack size: " + queue2.size());
+	    //Expected:
+	    //Stack size: 2
 
-	    System.out.println("Stack is empty? " + queue.empty()); // true
+	    queue2.clear();
 
-	    queue.dequeue();
+	    System.out.println("Stack is empty? " + queue2.empty());
+	  	//Expected:
+	    //Stack is empty? true
 
-	    queue.peek();
+	    //check to see if dequeue and  peek work on empty queues
+	    try{
+	    	queue2.dequeue();
+	    	System.out.println("dequeue works on empty queue");
+	    }catch(Exception e) {
+	    	System.out.println("dequeue doesnt work on empty queue");
+	    }
+	  	//Expected:
+	    //dequeue works on empty queue
+
+	    try{
+	    	queue2.peek();
+	    	System.out.println("peek works on empty queue");
+	    }catch(Exception e) {
+	    	System.out.println("peek doesnt work on empty queue");
+	    }
+	    //Expected:
+	    //peek works on empty queue
 	}
 	
 }
