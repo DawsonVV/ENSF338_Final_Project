@@ -120,4 +120,83 @@ public class StackLL<T> extends SLL<T>{
 		public void print() {
 
 		}
+		
+		public static void main(String[] args) {
+			DNode<Integer> node1 = new DNode<Integer>(10);
+			DNode<Integer> node2 = new DNode<Integer>(9);
+			DNode<Integer> node3 = new DNode<Integer>(8);
+			DNode<Integer> node4 = new DNode<Integer>(7);
+			DNode<Integer> node5 = new DNode<Integer>(6);
+			DNode<Integer> node6 = new DNode<Integer>(5);
+			DNode<Integer> node7 = new DNode<Integer>(4);
+			DNode<Integer> node8 = new DNode<Integer>(3);
+			DNode<Integer> node9 = new DNode<Integer>(2);
+			DNode<Integer> node10 = new DNode<Integer>(1);
+		
+			StackLL<Integer> stack1 = new StackLL<Integer>(node1);
+
+		    System.out.println("Stack is empty? " + stack1.empty());
+		    //Expected:
+		    //Stack is empty? false
+			
+			StackLL<Integer> stack2 = new StackLL<Integer>();
+
+		    System.out.println("Stack is empty? " + stack2.empty()); // true
+		    //Expected:
+		    //Stack is empty? true
+
+		    stack2.push(node10);
+		    stack2.push(node9);
+		    stack2.push(node8);
+
+		    System.out.println("Top element: " + stack2.peek().getData());
+		    //Expected:
+		    //Top element: 3
+		    	
+		    System.out.println("Stack size: " + stack2.size());
+		    //Expected:
+		    //Stack size: 3
+		    
+		    System.out.println("Stack is empty? " + stack2.empty());
+		    //Expected:
+		    //Stack is empty? false
+		    
+		    DNode<Integer> get = stack2.pop();
+		    System.out.println("released: " + get.getData());
+		    //Expected:
+		    //released: 3
+
+		    System.out.println("Top element: " + stack2.peek().getData());
+		    //Expected:
+		    //Top element: 2
+		    
+		    System.out.println("Stack size: " + stack2.size());
+		    //Expected:
+		    //Stack size: 2
+
+		    stack2.clear();
+
+		    System.out.println("Stack is empty? " + stack2.empty());
+		    //Expected:
+		    //Stack is empty? true
+
+		    //check to see if pop and peek break on empty queues or not
+		    try{
+		    	stack2.pop();
+		    	System.out.println("peek works on empty stack");
+		    }catch(Exception e) {
+		    	System.out.println("peek doesnt work on empty stack");
+		    }
+		    //Expected:
+		    //peek works on empty queue
+		    
+		    try{
+		    	stack2.peek();
+		    	System.out.println("peek works on empty stack");
+		    }catch(Exception e) {
+		    	System.out.println("peek doesnt work on empty stack");
+		    }
+		    //Expected:
+		    //peek works on empty queue
+		}
 }
