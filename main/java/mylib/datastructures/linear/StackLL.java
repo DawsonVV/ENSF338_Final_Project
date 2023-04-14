@@ -120,4 +120,43 @@ public class StackLL<T> extends SLL<T>{
 		public void print() {
 
 		}
+		
+		public static void main(String[] args) {
+			DNode<Integer> node1 = new DNode<Integer>(10);
+			DNode<Integer> node2 = new DNode<Integer>(9);
+			DNode<Integer> node3 = new DNode<Integer>(8);
+			DNode<Integer> node4 = new DNode<Integer>(7);
+			DNode<Integer> node5 = new DNode<Integer>(6);
+			DNode<Integer> node6 = new DNode<Integer>(5);
+			DNode<Integer> node7 = new DNode<Integer>(4);
+			DNode<Integer> node8 = new DNode<Integer>(3);
+			DNode<Integer> node9 = new DNode<Integer>(2);
+			DNode<Integer> node10 = new DNode<Integer>(1);
+		
+			StackLL<Integer> stack = new StackLL<Integer>();
+
+		    System.out.println("Stack is empty? " + stack.empty()); // true
+
+		    stack.push(node10);
+		    stack.push(node9);
+		    stack.push(node8);
+
+		    System.out.println("Top element: " + stack.peek().getData()); // 3
+		    System.out.println("Stack size: " + stack.size()); // 3
+		    System.out.println("Stack is empty? " + stack.empty()); // false
+
+		    stack.pop();
+
+		    System.out.println("Top element: " + stack.peek().getData()); // 2
+		    System.out.println("Stack size: " + stack.size()); // 2
+
+		    stack.pop();
+		    stack.pop();
+
+		    System.out.println("Stack is empty? " + stack.empty()); // true
+
+		    stack.pop();
+		    
+		    stack.peek();
+		}
 }
