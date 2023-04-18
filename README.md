@@ -6,19 +6,8 @@ The main folder project consists of three folders, "nodes", "trees" and "linear"
 
 The testing on the Linear section of the code is done through a main method, whilst the testing on the trees section of the code is done through JUnit testing found under the same directory.
 
-### my-api
-The project is packaged using maven and converted into a .jar file. The code to showcase that is shown under the "my-api" directory.
-
-
-
-## Screenshots
-
-Project Showcase:
-
-- ![App Screenshot1](insert link)
-- ![App Screenshot2](insert link)
-- ![App Screenshot3](insert link)
-
+### demo
+The project is packaged using maven and converted into a .jar file. The code to showcase that is shown under the "demo" directory inside the "target" folder.
 
 ## Dependancy
 
